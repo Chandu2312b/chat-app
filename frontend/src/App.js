@@ -69,61 +69,77 @@ function App() {
     setMessage('');
   };
 
-  if (step === 'lobby') {
-    return (
-      <div className="App">
-        <h2>Real-Time Chat App</h2>
-        <div className="lobby-box">
-          <input
-            type="text"
-            placeholder="Enter username"
-            value={inputUsername}
-            onChange={e => setInputUsername(e.target.value)}
-          />
-          <button onClick={handleCreateRoom}>Create Room</button>
-        </div>
-        <div className="lobby-box">
-          <input
-            type="text"
-            placeholder="Enter room code"
-            value={inputRoomCode}
-            onChange={e => setInputRoomCode(e.target.value.toUpperCase())}
-          />
-          <input
-            type="text"
-            placeholder="Enter username"
-            value={inputUsername}
-            onChange={e => setInputUsername(e.target.value)}
-          />
-          <button onClick={handleJoinRoom}>Join Room</button>
-        </div>
-        {error && <div className="error">{error}</div>}
-      </div>
-    );
-  }
-
   return (
     <div className="App">
-      <h2>Room: {roomCode}</h2>
-      <div className="chat-box">
-        <div className="messages">
-          {messages.map((msg, idx) => (
-            <div key={idx} className={msg.user === username ? 'my-message' : msg.user === 'System' ? 'system-message' : 'other-message'}>
-              <b>{msg.user}:</b> {msg.text}
-            </div>
-          ))}
+      {/* Animated background */}
+      <div className="background"></div>
+
+      {/* Lobby screen */}
+      {step === 'lobby' && (
+        <div className="lobby-container">
+          <h2>💬 Real-Time Chat App</h2>
+          <div className="lobby-box">
+            <input
+              type="text"
+              placeholder="Enter username"
+              value={inputUsername}
+              onChange={(e) => setInputUsername(e.target.value)}
+            />
+            <button onClick={handleCreateRoom}>Create Room</button>
+          </div>
+          <div className="lobby-box">
+            <input
+              type="text"
+              placeholder="Enter room code"
+              value={inputRoomCode}
+              onChange={(e) => setInputRoomCode(e.target.value.toUpperCase())}
+            />
+            <input
+              type="text"
+              placeholder="Enter username"
+              value={inputUsername}
+              onChange={(e) => setInputUsername(e.target.value)}
+            />
+            <button onClick={handleJoinRoom}>Join Room</button>
+          </div>
+          {error && <div className="error">{error}</div>}
         </div>
-        <form className="input-box" onSubmit={handleSendMessage}>
-          <input
-            type="text"
-            placeholder="Type a message..."
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-          />
-          <button type="submit">Send</button>
-        </form>
-      </div>
-      {error && <div className="error">{error}</div>}
+      )}
+
+      {/* Chat screen */}
+      {step === 'chat' && (
+        <div className="chat-container">
+          <h2>Room: {roomCode}</h2>
+          <div className="chat-box">
+            <div className="messages">
+              {messages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={
+                    msg.user === username
+                      ? 'my-message'
+                      : msg.user === 'System'
+                      ? 'system-message'
+                      : 'other-message'
+                  }
+                >
+                  <b>{msg.user}:</b> {msg.text}
+                </div>
+              ))}
+            </div>
+            <form className="input-box" onSubmit={handleSendMessage}>
+              <input
+                type="text"
+                placeholder="Type a message..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <button type="submit">Send</button>
+            </form>
+          </div>
+          {error && <div className="error">{error}</div>}
+        </div>
+      )}
     </div>
   );
 }
