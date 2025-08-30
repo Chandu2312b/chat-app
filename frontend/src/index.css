@@ -5,9 +5,40 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* fallback background just in case */
+  background: #0f172a;
+  min-height: 100vh;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* === Aurora Animated Background === */
+.bg-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1200px 800px at 10% 20%, rgba(255,0,153,.35), transparent 60%),
+    radial-gradient(900px 700px at 90% 10%, rgba(0,200,255,.35), transparent 60%),
+    radial-gradient(1000px 600px at 30% 90%, rgba(120,0,255,.35), transparent 60%),
+    radial-gradient(800px 800px at 80% 80%, rgba(255,200,0,.35), transparent 60%),
+    linear-gradient(120deg, #0f172a, #111827);
+  filter: blur(30px) saturate(140%);
+  animation: move1 22s ease-in-out infinite alternate,
+             hue 18s linear infinite;
+  will-change: transform, filter;
+}
+
+@keyframes move1 {
+  0%   { background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 50% 50%; }
+  50%  { background-position: 20% 10%, 80% 20%, 10% 80%, 90% 90%, 50% 50%; }
+  100% { background-position: 35% 25%, 65% 15%, 20% 70%, 70% 85%, 50% 50%; }
+}
+
+@keyframes hue {
+  to { filter: blur(30px) saturate(140%) hue-rotate(360deg); }
 }
