@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
-const SERVER_URL = 'https://chat-app-5rtq.onrender.com';
+const SERVER_URL = 'http://localhost:5000';
 
 function App() {
   const [step, setStep] = useState('lobby'); // lobby, chat
@@ -14,6 +14,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState('');
   const socketRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     if (step === 'chat' && !socketRef.current) {
@@ -40,6 +41,13 @@ function App() {
     };
     // eslint-disable-next-line
   }, [step]);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   const handleCreateRoom = async () => {
     if (!inputUsername) return setError('Enter a username');
@@ -158,6 +166,7 @@ function App() {
                 </div>
               ))
             )}
+            <div ref={messagesEndRef} />
           </div>
           <form className="message-form" onSubmit={handleSendMessage}>
             <input
