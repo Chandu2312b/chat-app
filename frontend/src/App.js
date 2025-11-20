@@ -71,59 +71,112 @@ function App() {
 
   if (step === 'lobby') {
     return (
-      <div className="App">
-        <h2>Real-Time Chat App</h2>
-        <div className="lobby-box">
-          <input
-            type="text"
-            placeholder="Enter username"
-            value={inputUsername}
-            onChange={e => setInputUsername(e.target.value)}
-          />
-          <button onClick={handleCreateRoom}>Create Room</button>
-        </div>
-        <div className="lobby-box">
-          <input
-            type="text"
-            placeholder="Enter room code"
-            value={inputRoomCode}
-            onChange={e => setInputRoomCode(e.target.value.toUpperCase())}
-          />
-          <input
-            type="text"
-            placeholder="Enter username"
-            value={inputUsername}
-            onChange={e => setInputUsername(e.target.value)}
-          />
-          <button onClick={handleJoinRoom}>Join Room</button>
-        </div>
-        {error && <div className="error">{error}</div>}
+      <div className="app-container">
+        <header className="app-header">
+          <div className="header-content">
+            <h1 className="app-title">💬 ChatApp</h1>
+            <p className="app-subtitle">Real-time messaging made simple</p>
+          </div>
+        </header>
+        <main className="main-content">
+          <div className="lobby-container">
+            <div className="lobby-card">
+              <h2 className="card-title">Create a Room</h2>
+              <p className="card-description">Start a new chat room and invite others</p>
+              <div className="input-group">
+                <input
+                  type="text"
+                  placeholder="Enter your username"
+                  value={inputUsername}
+                  onChange={e => setInputUsername(e.target.value)}
+                  className="input-field"
+                  onKeyPress={(e) => e.key === 'Enter' && handleCreateRoom()}
+                />
+                <button onClick={handleCreateRoom} className="btn btn-primary">
+                  Create Room
+                </button>
+              </div>
+            </div>
+            <div className="divider">
+              <span>OR</span>
+            </div>
+            <div className="lobby-card">
+              <h2 className="card-title">Join a Room</h2>
+              <p className="card-description">Enter a room code to join an existing chat</p>
+              <div className="input-group">
+                <input
+                  type="text"
+                  placeholder="Enter room code"
+                  value={inputRoomCode}
+                  onChange={e => setInputRoomCode(e.target.value.toUpperCase())}
+                  className="input-field"
+                  maxLength="6"
+                />
+                <input
+                  type="text"
+                  placeholder="Enter your username"
+                  value={inputUsername}
+                  onChange={e => setInputUsername(e.target.value)}
+                  className="input-field"
+                  onKeyPress={(e) => e.key === 'Enter' && handleJoinRoom()}
+                />
+                <button onClick={handleJoinRoom} className="btn btn-secondary">
+                  Join Room
+                </button>
+              </div>
+            </div>
+            {error && <div className="error-message">{error}</div>}
+          </div>
+        </main>
       </div>
     );
   }
 
   return (
-    <div className="App">
-      <h2>Room: {roomCode}</h2>
-      <div className="chat-box">
-        <div className="messages">
-          {messages.map((msg, idx) => (
-            <div key={idx} className={msg.user === username ? 'my-message' : msg.user === 'System' ? 'system-message' : 'other-message'}>
-              <b>{msg.user}:</b> {msg.text}
-            </div>
-          ))}
+    <div className="app-container">
+      <header className="chat-header">
+        <div className="header-content">
+          <div className="room-info">
+            <h1 className="room-title">Room: <span className="room-code">{roomCode}</span></h1>
+            <p className="room-subtitle">Connected as <span className="username">{username}</span></p>
+          </div>
         </div>
-        <form className="input-box" onSubmit={handleSendMessage}>
-          <input
-            type="text"
-            placeholder="Type a message..."
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-          />
-          <button type="submit">Send</button>
-        </form>
-      </div>
-      {error && <div className="error">{error}</div>}
+      </header>
+      <main className="chat-main">
+        <div className="chat-container">
+          <div className="messages-container">
+            {messages.length === 0 ? (
+              <div className="empty-state">
+                <p>No messages yet. Start the conversation!</p>
+              </div>
+            ) : (
+              messages.map((msg, idx) => (
+                <div key={idx} className={`message ${msg.user === username ? 'message-own' : msg.user === 'System' ? 'message-system' : 'message-other'}`}>
+                  {msg.user !== 'System' && <span className="message-user">{msg.user}</span>}
+                  <span className="message-text">{msg.text}</span>
+                  <span className="message-time">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+              ))
+            )}
+          </div>
+          <form className="message-form" onSubmit={handleSendMessage}>
+            <input
+              type="text"
+              placeholder="Type your message..."
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              className="message-input"
+            />
+            <button type="submit" className="send-button" disabled={!message.trim()}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </form>
+        </div>
+        {error && <div className="error-message">{error}</div>}
+      </main>
     </div>
   );
 }
